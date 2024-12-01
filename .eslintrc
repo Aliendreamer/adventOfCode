@@ -1,0 +1,244 @@
+{
+	"root": true,
+	"extends": [
+		"plugin:react/recommended",
+		"airbnb/base",
+		"prettier",
+		"plugin:jsdoc/recommended-typescript",
+		"plugin:promise/recommended",
+		"plugin:react-hooks/recommended",
+		"plugin:cypress/recommended"
+	],
+	"plugins": [
+		"@typescript-eslint",
+		"jsx-a11y",
+		"react",
+		"import",
+		"prettier",
+		"react-hooks",
+		"only-ascii",
+		"react-func"
+	],
+	"parser": "@typescript-eslint/parser",
+	"env": {
+		"browser": true,
+		"commonjs": true,
+		"es6": true,
+		"node": true
+	},
+	"parserOptions": {
+		"ecmaVersion": 6,
+		"sourceType": "module",
+		"ecmaFeatures": {
+			"jsx": true,
+			"generators": true
+		}
+	},
+	"globals": {
+		"it": "readonly"
+	},
+	"settings": {
+		"import/ignore": [
+			"node_modules",
+			"./cypress/node_modules",
+			"\\.(json|css|jpg|png|gif|eot|svg|ttf|woff|woff2|mp4|webm)$"
+		],
+		"import/extensions": [
+			".js",
+			".ts",
+			".tsx"
+		],
+		"import/resolver": {
+			"node": {
+				"paths": [
+					"src"
+				],
+				"extensions": [
+					".js",
+					".jsx",
+					".ts",
+					".tsx"
+				]
+			},
+			"typescript": {
+				"project": "./tsconfig.json"
+			}
+		},
+		"react": {
+			"version": "detect"
+		}
+	},
+	"rules": {
+		"arrow-body-style": "off",
+		"camelcase": "off",
+		"class-methods-use-this": "off",
+		"consistent-return": "warn",
+		"curly": "warn",
+		"dot-notation": "warn",
+		"eqeqeq": "warn",
+		"global-require": "warn",
+		"import/no-cycle": [
+			"warn",
+			{
+				"maxDepth": 1,
+				"ignoreExternal": true
+			}
+		],
+		"no-promise-executor-return": "off",
+		"default-param-last": "off", // i don't want this to obstruct us maybe later we can refactor
+		"import/no-duplicates": "warn",
+		"import/no-extraneous-dependencies": "off",
+		"import/no-named-as-default": "warn",
+		"import/no-unresolved": "warn",
+		"import/prefer-default-export": "off",
+		"no-bitwise": "off",
+		"no-case-declarations": "warn",
+		"no-cond-assign": "warn",
+		"no-console": "off", // we remove console logs for prod builds anyway
+		"no-continue": "warn",
+		"no-empty": "warn",
+		"no-multi-assign": "warn",
+		"no-nested-ternary": "off",
+		"no-new": "warn",
+		"no-param-reassign": "off",
+		"no-plusplus": "warn", // allow Unary operator
+		"no-restricted-globals": "warn",
+		"no-restricted-syntax": "warn",
+		"no-shadow": "off",
+		"@typescript-eslint/no-shadow": [
+			"warn"
+		],
+		"no-underscore-dangle": "off",
+		"no-unused-expressions": [
+			"warn",
+			{
+				"allowShortCircuit": true,
+				"allowTernary": true
+			}
+		],
+		// note you must disable the base rule as it can report incorrect errors
+		"no-unused-vars": "off",
+		"@typescript-eslint/no-unused-vars": [
+			"warn"
+		],
+		// note you must disable the base rule as it can report incorrect errors
+		"no-use-before-define": "off",
+		"@typescript-eslint/no-use-before-define": [
+			"off"
+		],
+		"no-useless-concat": "warn",
+		"one-var": [
+			"warn",
+			"never"
+		],
+		"prefer-const": "warn",
+		"prefer-destructuring": "warn",
+		"prefer-promise-reject-errors": "warn", // we have multiple places where promises are rejected with an object having a specific structure
+		"prefer-rest-params": "warn",
+		"prefer-spread": "warn",
+		"react-hooks/rules-of-hooks": "warn",
+		"react/no-string-refs": "warn",
+		"react/prop-types": "off",
+		"react/display-name": "off",
+		"no-undef": "warn",
+		"no-debugger": "warn",
+		"import/extensions": [
+			"warn",
+			"ignorePackages",
+			{
+				"js": "never",
+				"jsx": "never",
+				"ts": "never",
+				"tsx": "never",
+				"mjs": "never"
+			}
+		],
+		// new rules
+		"max-len": [
+			"warn",
+			{
+				"code": 140,
+				"comments": 100,
+				"tabWidth": 4,
+				"ignoreUrls": true,
+				"ignoreStrings": true,
+				"ignoreTemplateLiterals": true,
+				"ignoreRegExpLiterals": true,
+				"ignoreTrailingComments": true
+			}
+		],
+		"max-statements": [
+			"warn",
+			{
+				"max": 20
+			},
+			{
+				"ignoreTopLevelFunctions": true
+			}
+		],
+		"react-func/max-lines-per-function": [
+			"warn",
+			{
+				"max": 50,
+				"skipBlankLines": true,
+				"skipComments": true,
+				"IIFEs": true
+			}
+		],
+		"max-lines": [
+			"warn",
+			{
+				"max": 500,
+				"skipBlankLines": true,
+				"skipComments": true
+			}
+		],
+		"max-params": "off",
+		"max-depth": [
+			"warn",
+			{
+				"max": 4
+			}
+		],
+		"complexity": [
+			"warn",
+			{
+				"max": 15
+			}
+		],
+		// "only-ascii/only-ascii": 2,
+		"jsdoc/check-tag-names": [
+			"warn",
+			{
+				"definedTags": [
+					"date",
+					"category",
+					"component"
+				]
+			}
+		],
+		"no-trailing-spaces": "warn",
+		"jsdoc/require-property-description": "off",
+		"jsdoc/no-types": "off",
+		"jsdoc/require-param-description": "off",
+		"jsdoc/require-returns-description": "off",
+		"jsdoc/tag-lines": "off",
+		"object-curly-spacing": "warn"
+	},
+	"overrides": [
+		{
+			"files": [
+				"reducer.ts",
+				"*.reducer.ts",
+				"hooks.ts",
+				"*.tsx",
+				"*.jsx"
+			],
+			"rules": {
+				"react-func/max-lines-per-function": "off",
+				"complexity": "off",
+				"max-statements": "off"
+			}
+		}
+	]
+}
