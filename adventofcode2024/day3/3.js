@@ -45,4 +45,17 @@ const task2 = ()=>{
 		}
 		return total;
 }
-console.log(task2());
+
+const task2func = ()=>{
+	const filepath= path.resolve( process.cwd(),"adventofcode2024","day3",'input.txt');
+	const mulRegex = /do\(\)|don't\(\)|mul\((\d+),(\d+)\)/g;
+	const corruptedMemory = readInput(filepath);
+	return Array.from(corruptedMemory.matchAll(mulRegex)).reduce((acc,match)=>(
+		{
+			enabled: match[0] === "do()" ? true : match[0] === "don't()" ? false : acc.enabled,
+			total: acc.enabled && match[0] !== "do()" && match[0] !== "don't()"? acc.total + (parseInt(match[1], 10) * parseInt(match[2], 10)) : acc.total
+		}
+	)	,{enabled:true,total:0}).total;
+}
+
+console.log(task2func());
