@@ -1,9 +1,0 @@
-# Ignore artifacts:
-public
-node_modules
-**/*.generated.ts
-infrastructure
-**/*.json
-**/*typedefs.ts
-**/*cctypedefdoc.js
-src/__SMART_APP_OLD__/api/graphql/types.ts
