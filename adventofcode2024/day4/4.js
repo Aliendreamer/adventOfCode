@@ -76,7 +76,6 @@ function isXMASPattern(grid, i, j) {
     const bottomLeft = grid[i + 2][j];
     const bottomRight = grid[i + 2][j + 2];
 
-    // Check if the diagonals form valid "MAS" or "SAM" sequences
     const isValidDiagonal =
         (topLeft === "M" && middle === "A" && bottomRight === "S") || // MAS
         (topLeft === "S" && middle === "A" && bottomRight === "M");   // SAM
@@ -85,7 +84,6 @@ function isXMASPattern(grid, i, j) {
         (topRight === "M" && middle === "A" && bottomLeft === "S") || // MAS
         (topRight === "S" && middle === "A" && bottomLeft === "M");   // SAM
 
-    // Both diagonals must be valid
     return isValidDiagonal && isValidAntiDiagonal;
 }
 
