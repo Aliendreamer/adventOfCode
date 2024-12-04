@@ -1,35 +1,18 @@
 import fs from "fs";
 import path from "path";
+import {readInput}  from '../helpers.mjs';
 
 const task1 =()=>{
 	const info =  fs.readFileSync(path.resolve(
-        "adventofcode2024","day2",'input.txt'), 'utf8').split('\n');
+        "adventofcode2024","day2",'testinput.txt'), 'utf8').split('\n');
 	const matrix = [];
 	for (const element of info) {
 		matrix.push(element.split(" ").map(Number));
 	}
 	let safe =0
 	for (const element of matrix) {
-		let curr=false;
-		let isInc =element[0]<=element[1];
-		for (let i = 1; i < element.length; i++)
-		{
-			const a = element[i] - element[i - 1];
-			if(isInc &&a<0){
-				curr=false;
-				break;
-			}
-			if(!isInc && a>=0){
-				curr=false;
-				break;
-			}
-			if(Math.abs(a)>3 || Math.abs(a)===0){
-				curr=false;
-				break;
-			}
-			curr=true;
-		}
-		safe = curr? safe+1:safe+0;
+		if(isSafe(element))safe++;
+
 	}
 	return safe;
 }
@@ -77,4 +60,6 @@ const withProblemDampener = (levels)=> {
 	return false;
 }
 
-console.log(task2());
+
+
+console.log(task1());
