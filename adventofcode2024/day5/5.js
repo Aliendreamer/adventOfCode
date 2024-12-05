@@ -18,7 +18,6 @@ const task1 = () =>{
 			const rules  = gridRules.filter(rule => rule[0]===number);
 			// we got the rules now check array if rule is correct for current page;
 			for (const rule of rules) {
-				const left=rule[0];
 				const right=rule[1];
 				//if left position we need to check if right exist and we before it
 				const rightExist = page.includes(right);
