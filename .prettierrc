@@ -1,0 +1,24 @@
+{
+	"singleQuote": true,
+	"trailingComma": "es5",
+	"tabWidth": 4,
+	"useTabs": false,
+	"overrides": [
+		{
+			"files": [
+				"*.json",
+				"*rc",
+				"*.yml"
+			],
+			"options": {
+				"tabWidth": 2
+			}
+		}
+	],
+	"printWidth": 140,
+	"semi": true,
+	"arrowParens": "always",
+	"bracketSpacing": true,
+	"jsxSingleQuote": false,
+	"endOfLine": "lf"
+}

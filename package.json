@@ -1,4 +1,11 @@
 {
   "type": "module",
-  "devDependencies": {}
+  "devDependencies": {
+    "@eslint/js": "9.16.0",
+    "eslint": "9.16.0",
+    "globals": "15.13.0"
+  },
+  "engines": {
+    "node": ">=20.17.0"
+  }
 }
