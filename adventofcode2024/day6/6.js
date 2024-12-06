@@ -1,33 +1,41 @@
 import path from 'path';
-import {readInput,isValid}  from '../helpers.mjs';
+import {readInput,isValid,GridMovePatterns}  from '../helpers.mjs';
 
-const isObstruction =(position,i)=> position ==="#";
+const isObstruction =(position)=> position ==="#"|| position ==="0";
 const findStartPosition =(row) => row.findIndex(x=>x==="^");
 const isFreed = (position,cols,rows) => position[0]<0 || position[0]>=cols || position[1]<0 || position[1]>=rows;
-
-const task1 = () =>{
-	const filepath= path.resolve(process.cwd(),"adventofcode2024","day6",'input.txt');
-	const matrix = readInput(filepath).split("\n").map(x=>x.split(""));
-	const rows = matrix.length;
-	const cols = matrix[0].length;
-	let start=0;
-	let isOut = false;
-	// find the start position
+const startGuard = (matrix,rows) => {
+	let start =[];
 	for(let i=0;i<rows;i++){
 		const row = matrix[i];
 		if(row.includes("^")){
 			const position = findStartPosition(row);
 			start =[i,position];
-			console.log(start);
 			break;
 		}
 	}
+	return start;
+}
+
+const task1 = (grid) =>{
+	let matrix = grid;
+	let stime = performance.now();
+	if(!grid){
+		const filepath= path.resolve(process.cwd(),"adventofcode2024","day6",'input.txt');
+		matrix = readInput(filepath).split("\n").map(x=>x.split(""));
+	}
+	const rows = matrix.length;
+	const cols = matrix[0].length;
+	let start=startGuard(matrix,rows);
+	let isOut = false;
+	// find the start position
+
 	// add first position
 	const directions =new Set();
 	directions.add(start.join(","));
 	//calculate the moves allowed patterns;
-	const patterns = [[-1,0],[0,+1],[+1,0],[0,-1]];
-	let currentPattern=patterns[0];
+
+	let currentPattern=GridMovePatterns[0];
 	while(!isOut){
 		let newPosition = [start[0]+currentPattern[0],start[1]+currentPattern[1]];
 		//check if it is obstruction or free
@@ -38,75 +46,75 @@ const task1 = () =>{
 		}
 		if(isBlocker){
 			//change direction
-			currentPattern = patterns[(patterns.indexOf(currentPattern)+1)%4];
+			currentPattern = GridMovePatterns[(GridMovePatterns.indexOf(currentPattern)+1)%4];
 		}
 		if(!isFree && !isBlocker){
 			// if not free or it not blocker that we have to change direction update position and moves
-			matrix[newPosition[0]][newPosition[1]]="P";
 			directions.add(newPosition.join(","));
 			start = newPosition;
 		}
 	}
-	return directions.size;
+	let ftime = performance.now()
+	let elapsed_time = ftime - stime;
+	console.log(`Execution time task1: ${elapsed_time} ms`);
+	console.log(`count task 1: ${directions.size}`);
+	return {count : directions.size, directions};
 }
 
-const task2 = () =>{
-	let stime = performance.now();
 
-	const filepath= path.resolve(process.cwd(),"adventofcode2024","day6",'input.txt');
-	const mapped = readInput(filepath).split("\n").map(x=>x.split(""));
-	let result = 0;
-	for (let obY = 0; obY < mapped.length; obY++) {
-		for (let obX = 0; obX < mapped[obY].length; obX++) {
-			if (mapped[obY][obX] == "#" || mapped[obY][obX] == "^") continue;
-			const newMapped = mapped.map(x => x.map(x => x));
-			newMapped[obY][obX] = "#";
+const seekLoop=(matrix,row,col) =>{
+	const copiedMatrix = structuredClone(matrix);
+	const rows = matrix.length;
+	const cols = matrix[0].length;
+	copiedMatrix[row][col] = "0";
+	let alreadyVisited = new Set();
+	let position = [52,72]; // startGuard(matrix,rows); //[52,72]; from previous task 1 know my starting position always; it is nothing to gain but still
+	let looped=false;
+	let currentPattern=GridMovePatterns[0];
+	while (isValid(position[0],position[1],rows,cols)) {
+		let newPosition = [position[0]+currentPattern[0],position[1]+currentPattern[1]];
 
-			let xDirection = 0;
-			let yDirection = -1;
-			const areasVisited = [];
-			let y = newMapped.findIndex(x => x.includes("^"));
-			let x = newMapped[y].indexOf("^");
-
-				while (x >= 0 && x < newMapped[0].length && y >= 0 && y < newMapped.length) {
-					if (areasVisited.some(z => z.x == x && z.y == y && z.xDirection == xDirection && z.yDirection == yDirection)) {
-						result++;
-						break;
-					}
-					areasVisited.push({ x, y, xDirection, yDirection });
-					const movedX = x + xDirection;
-					const movedY = y + yDirection;
-					if (movedX < 0 || movedX >= newMapped[0].length || movedY < 0 || movedY >= newMapped.length) break;
-					if (newMapped[movedY][movedX] == "#") {
-						if (xDirection == 0 && yDirection == -1) {
-							xDirection = 1;
-							yDirection = 0;
-						}
-						else if (xDirection == 1 && yDirection == 0) {
-							xDirection = 0;
-							yDirection = 1;
-						}
-						else if (xDirection == 0 && yDirection == 1) {
-							xDirection = -1;
-							yDirection = 0;
-						}
-						else if (xDirection == -1 && yDirection == 0) {
-							xDirection = 0;
-							yDirection = -1;
-						}
-					}
-					else {
-						x = movedX;
-						y = movedY;
-					}
-				}
-			}
+		if (alreadyVisited.has(position.join(",").concat(currentPattern.join(",")))) {
+				looped=true;
+				break;
 		}
-		let ftime = performance.now()
-		let elapsed_time = ftime - stime;
-		console.log(`Execution time: ${elapsed_time} ms`);
-	return result;
+		alreadyVisited.add(position.join(",").concat(currentPattern.join(",")));
+
+		if(!isValid(newPosition[0],newPosition[1],rows,cols)){
+			break;
+		}
+		const isStop = isObstruction(copiedMatrix[newPosition[0]][newPosition[1]])
+		if(isStop){
+			currentPattern = GridMovePatterns[(GridMovePatterns.indexOf(currentPattern)+1)%4];
+		}
+		if(!isStop){
+			position = newPosition;
+		}
+
+	}
+	return looped ? 1 : 0;
 }
 
-//4977
+const task2 = ()=>{
+	let stime = performance.now();
+	const filepath= path.resolve(process.cwd(),"adventofcode2024","day6",'input.txt');
+	const matrix = readInput(filepath).split("\n").map(x=>x.split(""));
+	const first = task1(matrix);
+	let loops =0;
+	for (const element of first.directions.values()) {
+		const position = element.split(",").map(x=>parseInt(x));
+		if(matrix[position[0]][position[1]]==="^"){
+			continue;
+		}
+		const newLoop = seekLoop(matrix,position[0],position[1]);
+		loops += newLoop;
+	}
+	let ftime = performance.now()
+	let elapsed_time = ftime - stime;
+	console.log(`Execution time task2: ${elapsed_time} ms`);
+	console.log(`total loops ${loops}`);
+}
+
+
+//4977 1729
 console.log(task2());
