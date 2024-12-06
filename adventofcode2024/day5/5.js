@@ -77,8 +77,6 @@ const task2 =()=>{
 						page[rightIndex]=number;
 						j=rightIndex-1;
 					}
-
-
 				}
 			}
 		}
