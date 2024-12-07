@@ -95,5 +95,36 @@ const task2 = () => {
     return combinations;
 };
 
-console.log(task1());
-console.log(task2());
+const simpler = () => {
+    let stime = performance.now();
+    const filepath = path.resolve(process.cwd(), 'adventofcode2024', 'day7', 'input.txt');
+    const lines = readInput(filepath).split('\n');
+    const solve = (target, numbers, val, concat) => {
+        if (!numbers.length) return val === target;
+        if (val > target) return false;
+
+        const [curr, ...rem] = numbers;
+
+        return (
+            solve(target, rem, val * curr, concat) ||
+            solve(target, rem, val + curr, concat) ||
+            (concat && solve(target, rem, Number(`${val}${curr}`), concat))
+        );
+    };
+
+    let part1 = 0,
+        part2 = 0;
+    for (const line of lines) {
+        const [target, first, ...rem] = line.split(/:? /).map(Number);
+        part1 += solve(target, rem, first, false) ? target : 0;
+        part2 += solve(target, rem, first, true) ? target : 0;
+    }
+    console.log(part1, part2);
+    let ftime = performance.now();
+    let elapsed_time = ftime - stime;
+    console.log(`Execution time  recursive: ${elapsed_time} ms`);
+};
+
+// console.log(task1());
+//console.log(task2());
+simpler();
