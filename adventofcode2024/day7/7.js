@@ -127,4 +127,50 @@ const simpler = () => {
 
 // console.log(task1());
 //console.log(task2());
-simpler();
+// simpler();
+
+const simpler2 = () => {
+    let stime = performance.now();
+
+    // Filepath and input reading
+    const filepath = path.resolve(process.cwd(), 'adventofcode2024', 'day7', 'input.txt');
+    const lines = readInput(filepath).split('\n');
+
+    // Mathematical concatenation function this i saw from internet in the solutions it really halves the time
+    const concatNumbers = (a, b) => {
+        const pow = Math.floor(Math.log10(b) + 1); // Number of digits in b
+        return a * Math.pow(10, pow) + b; // Shift a and add b
+    };
+
+    // Recursive solve function
+    const solve = (target, numbers, val, combine) => {
+        if (!numbers.length) return val === target; // Base case: if no numbers left, check target
+        if (val > target) return false; // If value exceeds target, stop further exploration
+
+        const [curr, ...rem] = numbers;
+
+        return (
+            solve(target, rem, val * curr, combine) || // Try multiplication
+            solve(target, rem, val + curr, combine) || // Try addition
+            (combine && solve(target, rem, concatNumbers(val, curr), combine)) // Try mathematical concatenation if allowed
+        );
+    };
+
+    // Processing input
+    let part1 = 0,
+        part2 = 0;
+    for (const line of lines) {
+        const [target, first, ...rem] = line.split(/:? /).map(Number);
+        part1 += solve(target, rem, first, false) ? target : 0; // Solve without concatenation
+        part2 += solve(target, rem, first, true) ? target : 0; // Solve with concatenation
+    }
+
+    console.log('Part 1:', part1); // Total calibration result for addition and multiplication
+    console.log('Part 2:', part2); // Total calibration result with concatenation included
+
+    let ftime = performance.now();
+    let elapsed_time = ftime - stime;
+    console.log(`Execution time: ${elapsed_time.toFixed(2)} ms`);
+};
+
+simpler2();
