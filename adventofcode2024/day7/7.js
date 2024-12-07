@@ -99,16 +99,16 @@ const simpler = () => {
     let stime = performance.now();
     const filepath = path.resolve(process.cwd(), 'adventofcode2024', 'day7', 'input.txt');
     const lines = readInput(filepath).split('\n');
-    const solve = (target, numbers, val, concat) => {
+    const solve = (target, numbers, val, combine) => {
         if (!numbers.length) return val === target;
         if (val > target) return false;
 
         const [curr, ...rem] = numbers;
 
         return (
-            solve(target, rem, val * curr, concat) ||
-            solve(target, rem, val + curr, concat) ||
-            (concat && solve(target, rem, Number(`${val}${curr}`), concat))
+            solve(target, rem, val * curr, combine) ||
+            solve(target, rem, val + curr, combine) ||
+            (combine && solve(target, rem, Number(`${val}${curr}`), combine))
         );
     };
 
