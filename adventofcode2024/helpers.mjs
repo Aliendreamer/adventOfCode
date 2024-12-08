@@ -23,3 +23,7 @@ export const GridMovePatternsAndDiagonals = [
     [-1, 1], // Up-Right
     [-1, -1], // Up-Left
 ];
+
+export const drawGrid = (grid) => {
+    console.log(grid.map((row) => row.join('')).join('\n'));
+};
