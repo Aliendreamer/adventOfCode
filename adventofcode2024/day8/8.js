@@ -48,7 +48,6 @@ const task1 = () => {
     };
 
     const antinodeSet = new Set();
-
     // Compare each pair of antennas
     for (let i = 0; i < antennas.length; i++) {
         for (let j = i + 1; j < antennas.length; j++) {
