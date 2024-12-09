@@ -139,7 +139,7 @@ const task2 = () => {
     console.log(values);
     let ftime = performance.now();
     let elapsed_time = ftime - stime;
-    console.log(`Execution time task1: ${elapsed_time} ms`);
+    console.log(`Execution time task2: ${elapsed_time} ms`);
 };
 task1();
 task2();
