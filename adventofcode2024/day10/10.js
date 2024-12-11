@@ -15,7 +15,6 @@ function findStarts(heightMap) {
     return trailheads;
 }
 
-// Perform BFS from a trailhead to compute the score
 function bfsTrailheadScore(heightMap, trailhead) {
     const rows = heightMap.length;
     const cols = heightMap[0].length;
@@ -92,7 +91,7 @@ const task1 = () => {
     for (const trailhead of trailheads) {
         const score = bfsTrailheadScore(grid, trailhead);
         result += score;
-        console.log(`Trailhead at (${trailhead[0]}, ${trailhead[1]}) has score: ${score}`);
+        // console.log(`Trailhead at (${trailhead[0]}, ${trailhead[1]}) has score: ${score}`);
     }
     let ftime = performance.now();
     let elapsed_time = ftime - stime;
