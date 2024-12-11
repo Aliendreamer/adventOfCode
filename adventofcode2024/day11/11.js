@@ -17,15 +17,16 @@ const task1naive = () => {
                 continue;
             }
             if (isSecondRule(numbers[index])) {
-                const newNums = handleSecondRule(numbers[index]);
-                numbers[index] = newNums[0];
-                numbers.splice(index + 1, 0, newNums[1]);
+                const s = `${numbers[index]}`;
+                const left = parseInt(s.slice(0, s.length / 2));
+                const right = parseInt(s.slice(s.length / 2, s.length));
+                numbers[index] = left;
+                numbers.splice(index + 1, 0, right);
                 index++;
                 continue;
             }
             numbers[index] = numbers[index] * 2024;
         }
-        console.log(numbers);
         blink++;
     }
     console.log(numbers.length);
@@ -109,3 +110,5 @@ const task1 = () => {
 };
 task1();
 task2();
+
+task1naive();
