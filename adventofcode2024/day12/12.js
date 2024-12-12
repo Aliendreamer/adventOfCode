@@ -1,5 +1,5 @@
 import path from 'path';
-import { readInput, GridMovePatterns, isValid } from '../helpers.mjs';
+import { readInput, GridMovePatterns, isValid, measurementWrapper } from '../helpers.mjs';
 
 const canContinue = (x, y) => x === y;
 
@@ -77,7 +77,6 @@ const bfsRecursive = (gardens, start, visited, isTask2) => {
 };
 
 const task1 = () => {
-    let stime = performance.now();
     const filepath = path.resolve(process.cwd(), 'adventofcode2024', 'day12', 'input.txt');
     const gardens = readInput(filepath)
         .trim()
@@ -94,13 +93,9 @@ const task1 = () => {
         .filter((x) => x != 0)
         .reduce((a, b) => a + b, 0);
     console.log(result);
-    let ftime = performance.now();
-    let elapsed_time = ftime - stime;
-    console.log(`Execution time task1: ${elapsed_time} ms`);
 };
 
 const task2 = () => {
-    let stime = performance.now();
     const filepath = path.resolve(process.cwd(), 'adventofcode2024', 'day12', 'input.txt');
     const gardens = readInput(filepath)
         .trim()
@@ -117,10 +112,7 @@ const task2 = () => {
         .filter((x) => x != 0)
         .reduce((a, b) => a + b, 0);
     console.log(result);
-    let ftime = performance.now();
-    let elapsed_time = ftime - stime;
-    console.log(`Execution time task1: ${elapsed_time} ms`);
 };
 
-task1();
-task2();
+measurementWrapper(task1);
+measurementWrapper(task2);

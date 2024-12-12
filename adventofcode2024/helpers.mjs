@@ -1,7 +1,7 @@
 import fs from 'fs';
 
 export const readInput = (filepath) => {
-    return fs.readFileSync(filepath, 'utf8');
+    return fs.readFileSync(filepath, 'utf8').trim();
 };
 
 export const isValid = (x, y, rows, cols) => x >= 0 && y >= 0 && x < rows && y < cols;
@@ -26,4 +26,12 @@ export const GridMovePatternsAndDiagonals = [
 
 export const drawGrid = (grid) => {
     console.log(grid.map((row) => row.join('')).join('\n'));
+};
+
+export const measurementWrapper = (fn) => {
+    let stime = performance.now();
+    fn();
+    let ftime = performance.now();
+    let elapsed_time = ftime - stime;
+    console.log(`Execution time task1: ${elapsed_time} ms`);
 };
