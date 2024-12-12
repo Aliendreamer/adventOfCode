@@ -9,6 +9,7 @@ const bfsRecursive = (gardens, start, visited, isTask2) => {
     const queue = [start];
     const gardenPlots = new Set();
     const gardenFences = new Map();
+    let param = 0;
     while (queue.length > 0) {
         const [r, c] = queue.shift();
         const key = `${r},${c}`;
@@ -26,6 +27,7 @@ const bfsRecursive = (gardens, start, visited, isTask2) => {
             }
             if (!canContinue(gardens?.[r]?.[c], gardens?.[nr]?.[nc])) {
                 const dirHash = `${dr},${dc}`;
+                param++;
                 if (!gardenFences.has(dirHash)) {
                     gardenFences.set(dirHash, []);
                 }
@@ -61,19 +63,8 @@ const bfsRecursive = (gardens, start, visited, isTask2) => {
 
         return gardenPlots.size * sides;
     }
-    let size = 0;
-    for (const key of gardenPlots.values()) {
-        const [r, c] = key.split(',').map(Number);
-        for (const [dr, dc] of GridMovePatterns) {
-            const nr = r + dr;
-            const nc = c + dc;
 
-            if (!isValid(nr, nc, rows, cols) || !canContinue(gardens[r][c], gardens[nr][nc])) {
-                size++;
-            }
-        }
-    }
-    return gardenPlots.size * size;
+    return gardenPlots.size * param;
 };
 
 const task1 = () => {
