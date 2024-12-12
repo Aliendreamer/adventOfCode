@@ -9,7 +9,7 @@ const bfsRecursive = (gardens, start, visited, isTask2) => {
     const queue = [start];
     const gardenPlots = new Set();
     const gardenFences = new Map();
-    let param = 0;
+    let gardenEdge = 0;
     while (queue.length > 0) {
         const [r, c] = queue.shift();
         const key = `${r},${c}`;
@@ -18,7 +18,6 @@ const bfsRecursive = (gardens, start, visited, isTask2) => {
         gardenPlots.add(key);
         visited.set(key);
 
-        // Explore neighbors with a height increase of exactly 1
         for (const [dr, dc] of GridMovePatterns) {
             const nr = r + dr;
             const nc = c + dc;
@@ -27,7 +26,7 @@ const bfsRecursive = (gardens, start, visited, isTask2) => {
             }
             if (!canContinue(gardens?.[r]?.[c], gardens?.[nr]?.[nc])) {
                 const dirHash = `${dr},${dc}`;
-                param++;
+                gardenEdge++;
                 if (!gardenFences.has(dirHash)) {
                     gardenFences.set(dirHash, []);
                 }
@@ -64,7 +63,7 @@ const bfsRecursive = (gardens, start, visited, isTask2) => {
         return gardenPlots.size * sides;
     }
 
-    return gardenPlots.size * param;
+    return gardenPlots.size * gardenEdge;
 };
 
 const task1 = () => {
