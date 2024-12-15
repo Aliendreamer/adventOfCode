@@ -75,6 +75,7 @@ const task2 = () => {
         const machine = { prize, buttonA, buttonB };
         machines.set(index, machine);
     }
+
     let totalTokens = 0;
     let prizesWon = 0;
 
