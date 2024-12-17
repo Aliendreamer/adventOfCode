@@ -135,109 +135,93 @@ const task2b = () => {
     const cols = grid[0].length;
 
     const { start, end } = getEndpoints(grid, rows, cols);
-    const distances = new Map();
-    const adjustedPaths = new Map();
+
+    // Movement directions: [row delta, col delta] corresponding to directions
+    const GridMovePatterns = [
+        [0, 1], // East
+        [1, 0], // South
+        [0, -1], // West
+        [-1, 0], // North
+    ];
+    const oppositeDirection = [2, 3, 0, 1]; // Opposite directions
+    const toKey = (r, c, dir) => `${r},${c},${dir}`;
+
+    // Min-heap for Dijkstra's algorithm
     const heap = [];
     const push = (state) => {
         heap.push(state);
-        heap.sort((a, b) => a[2] - b[2]);
+        heap.sort((a, b) => a.score - b.score); // Sort by score (cost)
     };
 
-    // Initialize the heap with the starting position
-    push([start[0], start[1], 0, 0]);
-    distances.set(toKey(start[0], start[1], 0), 0);
-    adjustedPaths.set(toKey(start[0], start[1], 0), { score: 0, steps: [] });
+    const distances = new Map();
+    const paths = new Map();
 
-    let sums = [];
-    let pathOptions = [];
+    // Start state: [row, col, cost, direction, steps, path history]
+    push({ r: start[0], c: start[1], score: 0, dir: 0, steps: 0, history: [`${start[0]},${start[1]}`] });
+    distances.set(toKey(start[0], start[1], 0), 0);
+
+    let minCost = Infinity;
+    const optimalPaths = [];
 
     while (heap.length > 0) {
-        const [r, c, score, dir] = heap.shift();
+        const { r, c, score, dir, steps, history } = heap.shift();
 
-        // If we reach the end, record the score
+        // Stop when we reach the end
         if (r === end[0] && c === end[1]) {
-            const minSum = Math.min(...sums);
-            if (minSum < score) {
-                pathOptions = [];
+            if (score < minCost) {
+                minCost = score;
+                optimalPaths.length = 0; // Clear previous paths
             }
-            const tempPaths = [...adjustedPaths.entries()];
-            const duble = tempPaths.find(([, value]) => value.score === score);
-            pathOptions.push(duble);
-            const tempGrid = structuredClone(grid);
-            for (const step of duble[1].steps) {
-                const [r, c] = step.split(',').map(Number);
-                tempGrid[r][c] = 'O';
+            if (score === minCost) {
+                optimalPaths.push(history);
             }
-            drawGrid(tempGrid);
-            sums.push(score);
+            continue;
         }
 
-        // Move forward in the current direction
+        // Move forward in the same direction
         const [dr, dc] = GridMovePatterns[dir];
         const nr = r + dr;
         const nc = c + dc;
 
         if (isValid(nr, nc, rows, cols) && !isWall(grid[nr][nc])) {
-            const newScore = score + 1;
+            const newScore = score + 1; // Moving forward costs 1
             const key = toKey(nr, nc, dir);
+
             if (newScore < (distances.get(key) || Infinity)) {
                 distances.set(key, newScore);
-                adjustedPaths.set(key, {
-                    score: newScore,
-                    steps: [...(adjustedPaths.get(toKey(r, c, dir))?.steps || []), key],
-                });
-                push([nr, nc, newScore, dir]);
+                push({ r: nr, c: nc, score: newScore, dir, steps: steps + 1, history: [...history, `${nr},${nc}`] });
             }
         }
 
-        for (const rotation of [-1, 1]) {
-            const newDir = (dir + rotation + 4) % 4;
-            const newScore = score + 1000;
-            const key = toKey(nr, nc, newDir);
+        // Turn 90 degrees (left or right)
+        for (let newDir = 0; newDir < 4; newDir++) {
+            if (newDir === dir || newDir === oppositeDirection[dir]) continue; // Skip same and opposite direction
+
+            const newScore = score + 1000; // Turning costs 1000
+            const key = toKey(r, c, newDir);
+
             if (newScore < (distances.get(key) || Infinity)) {
                 distances.set(key, newScore);
-                adjustedPaths.set(key, {
-                    score: newScore,
-                    steps: [...(adjustedPaths.get(toKey(nr, nc, dir))?.steps || []), key],
-                });
-                push([r, c, newScore, newDir]);
+                push({ r, c, score: newScore, dir: newDir, steps, history: [...history, `${r},${c}`] });
             }
         }
     }
 
-    // Backtracking to reconstruct the path
-    const paths = [...adjustedPaths.entries()];
-    const sum = Math.min(...sums);
-    const optimalPath = paths.find(([, value]) => value.score === sum);
+    // Output Results
+    console.log(`Optimal Score: ${minCost}`);
+    console.log(`Number of Optimal Paths: ${optimalPaths.length}`);
 
-    for (const sum of sums) {
-        const op = paths.find(([, value]) => value.score === sum);
+    for (const path of optimalPaths) {
         const tempGrid = structuredClone(grid);
-        for (const step of op[1].steps) {
+        for (const step of path) {
             const [r, c] = step.split(',').map(Number);
             tempGrid[r][c] = 'O';
         }
-        drawGrid(grid);
-        console.log('Sum:', tempGrid);
-    }
-
-    if (optimalPath) {
-        for (const step of optimalPath[1].steps) {
-            const [r, c] = step.split(',').map(Number);
-            grid[r][c] = 'O';
-        }
-        drawGrid(grid);
-        const { steps } = optimalPath[1];
-        console.log('Optimal Score:', sum);
-        console.log('Optimal sums', sums);
-
-        console.log('Optimal Path Steps:', steps.length);
-    } else {
-        console.log('No valid path found.');
+        drawGrid(tempGrid);
     }
 };
 
-const task2bFixed = () => {
+const task2c = () => {
     const filepath = path.resolve(process.cwd(), 'adventofcode2024', 'day16', 'testinput.txt');
     const grid = readInput(filepath)
         .split('\n')
@@ -247,110 +231,76 @@ const task2bFixed = () => {
 
     const { start, end } = getEndpoints(grid, rows, cols);
 
-    const directions = [
-        [-1, 0], // Up
-        [1, 0], // Down
-        [0, -1], // Left
-        [0, 1], // Right
+    // Movement directions: [row delta, col delta] corresponding to directions
+    const GridMovePatterns = [
+        [0, 1], // East
+        [1, 0], // South
+        [0, -1], // West
+        [-1, 0], // North
     ];
-
+    const oppositeDirection = [2, 3, 0, 1]; // Opposite directions
     const toKey = (r, c, dir) => `${r},${c},${dir}`;
-    const isWall = (cell) => cell === '#';
-    const isValid = (r, c) => r >= 0 && c >= 0 && r < rows && c < cols && !isWall(grid[r][c]);
+
+    // Min-heap for Dijkstra's algorithm
+    const heap = [];
 
     const distances = new Map();
-    const adjustedPaths = new Map();
-    const heap = []; // Min-heap for Dijkstra's
 
-    const push = (state) => {
-        heap.push(state);
-        heap.sort((a, b) => a[2] - b[2]); // Min-heap based on score
-    };
-
-    push([start[0], start[1], 0, 0]); // [row, col, score, direction]
+    // Start state: [row, col, cost, direction, steps, path history]
+    heap.push({ r: start[0], c: start[1], score: 0, dir: 0, steps: 0, history: [`${start[0]},${start[1]}`] });
     distances.set(toKey(start[0], start[1], 0), 0);
-    adjustedPaths.set(toKey(start[0], start[1], 0), { score: 0, steps: [`${start[0]},${start[1]}`] });
 
-    let minScore = Infinity;
-    const validPaths = [];
+    let minCost = Infinity;
+    const optimalPaths = [];
 
     while (heap.length > 0) {
-        const [r, c, score, dir] = heap.shift();
+        const { r, c, score, dir, steps, history } = heap.shift();
 
-        // Stop processing if we exceed the current minimum score
-        if (score > minScore) continue;
-
-        // If we reach the end, update valid paths
+        // Stop when we reach the end
         if (r === end[0] && c === end[1]) {
-            if (score < minScore) {
-                minScore = score;
-                validPaths.length = 0; // Clear previous paths
+            if (score < minCost) {
+                minCost = score;
+                optimalPaths.length = 0; // Clear previous paths
             }
-            if (score === minScore) {
-                validPaths.push(adjustedPaths.get(toKey(r, c, dir)));
+            if (score === minCost) {
+                optimalPaths.push(history);
             }
             continue;
         }
 
-        // Explore movements in the current direction
-        const [dr, dc] = directions[dir];
+        // Move forward in the same direction
+        const [dr, dc] = GridMovePatterns[dir];
         const nr = r + dr;
         const nc = c + dc;
 
-        if (isValid(nr, nc)) {
-            const newScore = score + 1;
+        if (isValid(nr, nc, rows, cols) && !isWall(grid[nr][nc])) {
+            const newScore = score + 1; // Moving forward costs 1
             const key = toKey(nr, nc, dir);
 
             if (newScore < (distances.get(key) || Infinity)) {
                 distances.set(key, newScore);
-                const prevSteps = adjustedPaths.get(toKey(r, c, dir))?.steps || [];
-                adjustedPaths.set(key, {
-                    score: newScore,
-                    steps: [...prevSteps, `${nr},${nc}`],
-                });
-                push([nr, nc, newScore, dir]);
+                heap.push({ r: nr, c: nc, score: newScore, dir, steps: steps + 1, history: [...history, `${nr},${nc}`] });
             }
         }
 
-        // Handle direction changes (rotations)
-        for (const rotation of [-1, 1]) {
-            const newDir = (dir + rotation + 4) % 4; // Wrap around 0–3
-            const newScore = score + 1000;
+        for (let newDir = 0; newDir < 4; newDir++) {
+            if (newDir === dir || newDir === oppositeDirection[dir]) continue;
+            // here i probably make it score 1000 + 1000 as i cant make the distinction correctly if one path already passed
+            // this tile and this fucks me up and I am fucking lost as I correctly find 7036 but then other two are 8036 which is basically
+            // this one single tile that is already used to turn that i double
             const key = toKey(r, c, newDir);
-
+            const newScore = distances.has(key) ? distances.get(key) : score + 1000; // Turning costs 1000
             if (newScore < (distances.get(key) || Infinity)) {
                 distances.set(key, newScore);
-                const prevSteps = adjustedPaths.get(toKey(r, c, dir))?.steps || [];
-                adjustedPaths.set(key, {
-                    score: newScore,
-                    steps: [...prevSteps, `${r},${c}`],
-                });
-                push([r, c, newScore, newDir]);
+                heap.push({ r, c, score: newScore, dir: newDir, steps, history: [...history, `${r},${c}`] });
             }
         }
     }
 
-    // Collect all unique tiles from valid paths
-    const allPathTiles = new Set();
-    validPaths.forEach((path) => {
-        path.steps.forEach((tile) => {
-            allPathTiles.add(tile);
-        });
-    });
-
-    // Update the grid with all valid path tiles
-    const resultGrid = structuredClone(grid);
-    allPathTiles.forEach((tile) => {
-        const [r, c] = tile.split(',').map(Number);
-        resultGrid[r][c] = 'O';
-    });
-
-    // Draw the grid and output results
-    drawGrid(resultGrid);
-    console.log('Minimum Score:', minScore);
-    console.log('Number of Optimal Paths:', validPaths.length);
-    console.log('Total Tiles in Optimal Paths:', allPathTiles.size);
+    // Output Results
+    console.log(`Optimal Score: ${minCost}`);
+    console.log(`Number of Optimal Paths: ${optimalPaths.length}`);
 };
 
 // measurementWrapper(task1);
-measurementWrapper(task2bFixed);
+measurementWrapper(task2c);
