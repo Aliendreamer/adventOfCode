@@ -1,5 +1,5 @@
 import path from 'path';
-import { readInput, measurementWrapper, isValid, drawGrid, GridMovePatterns } from '../helpers.mjs';
+import { readInput, measurementWrapper, isValid, GridMovePatterns } from '../helpers.mjs';
 
 const toKey = (r, c, dir) => `${r},${c},${dir}`;
 
