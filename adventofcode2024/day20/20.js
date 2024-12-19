@@ -7,3 +7,5 @@ const task1 = () => {
     let possibleCount = 0;
     console.log(possibleCount);
 };
+
+measurementWrapper(task1);
