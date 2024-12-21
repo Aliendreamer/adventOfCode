@@ -1,27 +1,10 @@
 import path from 'path';
-import { readInput, measurementWrapper, isValid, GridMovePatterns } from '../helpers.mjs';
+import { readInput, measurementWrapper, isValid, GridMovePatterns, getEndpoints } from '../helpers.mjs';
 
 const toKey = (r, c, dir) => `${r},${c},${dir}`;
 
 const isWall = (position) => position === '#';
 
-const getEndpoints = (grid, rows, cols) => {
-    let start = '';
-    let end = '';
-    for (let i = 0; i < rows; i++) {
-        for (let j = 0; j < cols; j++) {
-            if (grid[i][j] === 'S') {
-                start = [i, j];
-                break;
-            }
-            if (grid[i][j] === 'E') {
-                end = [i, j];
-                break;
-            }
-        }
-    }
-    return { start, end };
-};
 const task1 = () => {
     const filepath = path.resolve(process.cwd(), 'adventofcode2024', 'day16', 'input.txt');
     const grid = readInput(filepath)
@@ -29,7 +12,7 @@ const task1 = () => {
         .map((line) => line.split(''));
     const rows = grid.length;
     const cols = grid[0].length;
-    const { start, end } = getEndpoints(grid, rows, cols);
+    const { start, end } = getEndpoints(grid, rows, cols, 'S', 'E');
     const distances = new Map();
     const heap = [];
     const push = (state) => {
@@ -81,7 +64,7 @@ const task2a = () => {
         .map((line) => line.split(''));
     const rows = grid.length;
     const cols = grid[0].length;
-    const { start, end } = getEndpoints(grid, rows, cols);
+    const { start, end } = getEndpoints(grid, rows, cols, 'S', 'E');
     const findAllMinPaths = (start, end) => {
         let stack = [{ p: start, path: [], cost: 0 }];
         let cur = {};
@@ -134,7 +117,7 @@ const task2b = () => {
     const rows = grid.length;
     const cols = grid[0].length;
 
-    const { start, end } = getEndpoints(grid, rows, cols);
+    const { start, end } = getEndpoints(grid, rows, cols, 'S', 'E');
 
     // Movement directions: [row delta, col delta] corresponding to directions
     const GridMovePatterns = [

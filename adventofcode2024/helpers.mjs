@@ -35,3 +35,25 @@ export const measurementWrapper = (fn) => {
     let elapsed_time = ftime - stime;
     console.log(`Execution time task1: ${elapsed_time} ms`);
 };
+
+export const toKey = (r, c, dir) => `${r},${c},${dir}`;
+
+export const isWall = (position) => position === '#';
+
+export const getEndpoints = (grid, rows, cols, start, end) => {
+    let startP = '';
+    let endP = '';
+    for (let i = 0; i < rows; i++) {
+        for (let j = 0; j < cols; j++) {
+            if (grid[i][j] === start) {
+                startP = [i, j];
+                break;
+            }
+            if (grid[i][j] === end) {
+                endP = [i, j];
+                break;
+            }
+        }
+    }
+    return { start: startP, end: endP };
+};
