@@ -36,7 +36,7 @@ const task1 = () => {
     console.log('Triangles:', filteredTriangles);
 };
 
-//  Bron-Kerbosch algorithm https://en.wikipedia.org/wiki/Bron%E2%80%93Kerbosch_algorithm
+// Bron-Kerbosch algorithm https://en.wikipedia.org/wiki/Bron%E2%80%93Kerbosch_algorithm
 // basically made the pseudocode from the wiki page into JS
 const bronKerbosch = (R, P, X, cliques, adjacencyList) => {
     if (P.size === 0 && X.size === 0) {
@@ -85,5 +85,5 @@ const task2 = () => {
     console.log('Password for the LAN party:', password);
 };
 
-// measurementWrapper(task1);
+measurementWrapper(task1);
 measurementWrapper(task2);
