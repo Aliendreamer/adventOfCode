@@ -7,11 +7,22 @@
 		{
 			"type": "node",
 			"request": "launch",
-			"name": "Launch Program",
+			"name": "Launch aoc 2024 js",
 			"skipFiles": [
 				"<node_internals>/**"
 			],
 			"program": "${workspaceFolder}/adventofcode2024/day21/21.js"
+		},
+		{
+			"name": "Launch aoc 2023 c#",
+			"type": "coreclr",
+			"request": "launch",
+			"preLaunchTask": "build",
+			"program": "${workspaceFolder}/adventofcode2023/bin/Debug/net9.0/adventofcode2023.dll",
+			"args": [],
+			"cwd": "${workspaceFolder}/adventofcode2023",
+			"stopAtEntry": false,
+			"console": "internalConsole"
 		}
 	]
 }
