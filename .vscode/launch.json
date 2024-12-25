@@ -11,7 +11,7 @@
 			"skipFiles": [
 				"<node_internals>/**"
 			],
-			"program": "${workspaceFolder}/adventofcode2024/day24/24c.js"
+			"program": "${workspaceFolder}/adventofcode2024/day21/21.js"
 		}
 	]
 }
