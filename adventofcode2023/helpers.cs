@@ -62,7 +62,8 @@ namespace adventofcode2023
 
 		public static (int[] startPoint, int[] endPoint) GetStartPoint(char[][] grid)
 		{
-			int[] startPoint, endPoint;
+			int[] startPoint = [];
+			int[] endPoint = [];
 			for (int i = 0; i < grid.Length; i++)
 			{
 				for (int j = 0; j < grid[0].Length; j++)
