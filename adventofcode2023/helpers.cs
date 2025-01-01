@@ -17,7 +17,15 @@ namespace adventofcode2023
 		public static void BenchmarkDay(Action func)
 		{
 			Stopwatch stopwatch = Stopwatch.StartNew();
-			func();
+			try
+			{
+				func();
+			}
+			catch (Exception e)
+			{
+
+				Console.WriteLine(string.Format(CultureInfo.InvariantCulture, "Exception Happened {0}", e.Message));
+			}
 			stopwatch.Stop();
 			Console.WriteLine($"Day  solution executed in: {stopwatch.ElapsedMilliseconds} ms");
 		}
@@ -84,5 +92,11 @@ namespace adventofcode2023
 		public static string ToKey(dynamic value1, dynamic value2) => $"{value1}_{value2}";
 
 		public static string ToKey(dynamic value1, dynamic value2, dynamic value3) => $"{value1}_{value2}_${value3}";
+		public static int ConcatNumbers(int a, int b)
+		{
+			int pow = (int)Math.Floor(Math.Floor(Math.Log10(b) + 1));
+			return (int)Math.Floor(a * Math.Pow(10, pow) + b);
+
+		}
 	}
 }
