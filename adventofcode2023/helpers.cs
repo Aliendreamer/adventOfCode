@@ -14,6 +14,16 @@ namespace adventofcode2023
 			return input;
 		}
 
+		public static string[] TaskInput(int day, bool isMultiLine = true)
+		{
+			string inputFileName = "input.txt";
+			string currentDirectory = Directory.GetCurrentDirectory();
+			string dirc = string.Format(CultureInfo.InvariantCulture, "day{0}", day);
+			string inputFilePath = Path.Combine(currentDirectory, "days", dirc, inputFileName);
+			string[] input = File.ReadAllLines(inputFilePath);
+			return input;
+		}
+
 		public static void BenchmarkDay(Action func)
 		{
 			Stopwatch stopwatch = Stopwatch.StartNew();
@@ -34,7 +44,7 @@ namespace adventofcode2023
 		[
 			new int[] {0, 1}, // Right
             new int[] {0, -1}, // Left
-            [1, 0], // Down
+            new int[] {1, 0}, // Down
             new int[] {-1, 0}, // Up
             new int[] {1, 1}, // Down-Right
             new int[] {1, -1}, // Down-Left
