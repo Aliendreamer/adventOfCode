@@ -17,7 +17,7 @@ namespace adventofcode2023
 			Console.WriteLine("Running Day 2 part 1");
 			int sumOfIds = 0;
 			int powerOf = 0;
-			string input = Helpers.TaskInput(2);
+			string input = (string)Helpers.TaskInput(2);
 			string[] games = input.Split("\n");
 			int red = 12;
 			int green = 13;
@@ -65,7 +65,7 @@ namespace adventofcode2023
 		{
 
 			int powerOf = 0;
-			string input = Helpers.TaskInput(2);
+			string input = (string)Helpers.TaskInput(2);
 			string[] games = input.Split("\n");
 
 			Regex regex = new(@"\d+", RegexOptions.Compiled);

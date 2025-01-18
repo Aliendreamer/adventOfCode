@@ -11,7 +11,7 @@ namespace adventofcode2023
 
 			Console.WriteLine("Running Day 1 part 1");
 
-			string input = Helpers.TaskInput(1);
+			string input = (string)Helpers.TaskInput(1);
 			string[] coordinates = input.Split("\n");
 			Regex regex = new(@"\d{1}", RegexOptions.Compiled);
 			ulong sum = coordinates.Select(x =>
@@ -53,7 +53,7 @@ namespace adventofcode2023
 				{"nine",9}
 
 			};
-			string input = Helpers.TaskInput(1);
+			string input = (string)Helpers.TaskInput(1);
 			string[] coordinates = input.Split("\n");
 			Regex regex = new(@"(?=(one|two|three|four|five|six|seven|eight|nine))|\d{1}", RegexOptions.IgnoreCase);
 
