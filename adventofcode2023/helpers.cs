@@ -2,26 +2,21 @@ namespace adventofcode2023
 {
 	using System.Diagnostics;
 	using System.Globalization;
+
 	public static class Helpers
 	{
-		public static string TaskInput(int day)
+		public static object TaskInput(int day, InputFormat format = InputFormat.SingleLine)
 		{
 			string inputFileName = "input.txt";
 			string currentDirectory = Directory.GetCurrentDirectory();
 			string dirc = string.Format(CultureInfo.InvariantCulture, "day{0}", day);
 			string inputFilePath = Path.Combine(currentDirectory, "days", dirc, inputFileName);
-			string input = File.ReadAllText(inputFilePath);
-			return input;
-		}
-
-		public static string[] TaskInput(int day, bool isMultiLine = true)
-		{
-			string inputFileName = "input.txt";
-			string currentDirectory = Directory.GetCurrentDirectory();
-			string dirc = string.Format(CultureInfo.InvariantCulture, "day{0}", day);
-			string inputFilePath = Path.Combine(currentDirectory, "days", dirc, inputFileName);
-			string[] input = File.ReadAllLines(inputFilePath);
-			return input;
+			return format switch
+			{
+				InputFormat.Multiline => File.ReadAllLines(inputFilePath),
+				InputFormat.SingleLine => File.ReadAllText(inputFilePath),
+				_ => throw new ArgumentOutOfRangeException(nameof(format), "Invalid input format")
+			};
 		}
 
 		public static void BenchmarkDay(Action func)

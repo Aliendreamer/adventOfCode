@@ -11,7 +11,7 @@ namespace adventofcode2023
 		public static void Run1()
 		{
 			Console.WriteLine("Running Day 3 part 1");
-			var lines = Helpers.TaskInput(3, true);
+			var lines = (string[])Helpers.TaskInput(3, InputFormat.Multiline);
 			var lineLength = lines[0].Length;
 
 			var symbolsRegex = new Regex("[^0-9.\r\n]");
@@ -55,7 +55,7 @@ namespace adventofcode2023
 		public static void Run2()
 		{
 			Console.WriteLine("Running Day 3 part 2");
-			var lines = Helpers.TaskInput(3, true);
+			var lines = (string[])Helpers.TaskInput(3, InputFormat.Multiline);
 			var lineLength = lines[0].Length;
 
 			var starRegex = new Regex("[*]");
