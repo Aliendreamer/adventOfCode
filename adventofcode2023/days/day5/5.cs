@@ -104,29 +104,88 @@ namespace adventofcode2023
 			long lowest = finalLocations.Min();
 			Console.WriteLine($"\nLowest location among seeds: {lowest}");
 		}
+
+		class Interval
+		{
+			public long Low;
+			public long High;
+			public long Offset;
+		}
+
+		static List<Interval> ApplyMappingStageEx(List<Interval> intervals, List<(long dest, long src, long len)> rules)
+		{
+			var result = new List<Interval>();
+
+			foreach (var iv in intervals)
+			{
+				var boundaries = new SortedSet<long>();
+				boundaries.Add(iv.Low);
+				boundaries.Add(iv.High);
+
+				foreach (var rule in rules)
+				{
+					long startDom = rule.src - iv.Offset;
+					long endDom = rule.src + rule.len - iv.Offset;
+					// Only add if they lie within our interval.
+					if (startDom > iv.Low && startDom < iv.High)
+						boundaries.Add(startDom);
+					if (endDom > iv.Low && endDom < iv.High)
+						boundaries.Add(endDom);
+				}
+
+				var boundsList = boundaries.ToList();
+				for (int i = 0; i < boundsList.Count - 1; i++)
+				{
+					long subLow = boundsList[i];
+					long subHigh = boundsList[i + 1];
+					long fval = subLow + iv.Offset;
+
+					(long dest, long src, long len)? ruleApplied = null;
+					foreach (var rule in rules)
+					{
+						if (fval >= rule.src && fval < rule.src + rule.len)
+						{
+							ruleApplied = rule;
+							break;
+						}
+					}
+					long newOffset = iv.Offset;
+					if (ruleApplied.HasValue)
+					{
+						newOffset += (ruleApplied.Value.dest - ruleApplied.Value.src);
+					}
+					result.Add(new Interval { Low = subLow, High = subHigh, Offset = newOffset });
+				}
+			}
+
+			return result;
+		}
+
 		public static void Run2()
 		{
-			Console.WriteLine("Running Day 5 part 2");
+			Console.WriteLine("Running Day 5 Part 2");
+
+
 			var lines = (string[])Helpers.TaskInput(5, InputFormat.Multiline);
 			var allLines = lines.ToList();
 			while (allLines.Count > 0 && string.IsNullOrWhiteSpace(allLines[0]))
 				allLines.RemoveAt(0);
-			List<long> seeds = new List<long>();
+
+			List<Interval> seedIntervals = new List<Interval>();
 			if (allLines.Count > 0 && allLines[0].StartsWith("seeds:", StringComparison.InvariantCulture))
 			{
 				var seedLine = allLines[0];
 				var tokens = seedLine.Split(' ', StringSplitOptions.RemoveEmptyEntries).Skip(1).ToArray();
 				for (int i = 0; i < tokens.Length; i += 2)
 				{
-					long rangeStart = long.Parse(tokens[i], CultureInfo.InvariantCulture);
-					long rangeLength = long.Parse(tokens[i + 1], CultureInfo.InvariantCulture);
-					for (long j = 0; j < rangeLength; j++)
-					{
-						seeds.Add(rangeStart + j);
-					}
+					long start = long.Parse(tokens[i], CultureInfo.InvariantCulture);
+					long length = long.Parse(tokens[i + 1], CultureInfo.InvariantCulture);
+					seedIntervals.Add(new Interval { Low = start, High = start + length, Offset = 0 });
 				}
 				allLines.RemoveAt(0);
 			}
+			Console.WriteLine($"Parsed {seedIntervals.Count} seed intervals.");
+
 			var mappingSections = new Dictionary<string, List<(long dest, long src, long len)>>();
 			int idx = 0;
 			while (idx < allLines.Count)
@@ -138,10 +197,10 @@ namespace adventofcode2023
 				}
 				string headerLine = allLines[idx].Trim();
 				idx++;
-				string sectionName = headerLine.EndsWith(" map:", StringComparison.InvariantCulture) ?
-									headerLine.Substring(0, headerLine.Length - " map:".Length) :
-									headerLine;
-				List<(long dest, long src, long len)> rules = [];
+				string sectionName = headerLine.EndsWith(" map:", StringComparison.InvariantCulture)
+										? headerLine.Substring(0, headerLine.Length - " map:".Length)
+										: headerLine;
+				List<(long dest, long src, long len)> rules = new List<(long dest, long src, long len)>();
 				while (idx < allLines.Count && !string.IsNullOrWhiteSpace(allLines[idx]))
 				{
 					var parts = allLines[idx].Split(' ', StringSplitOptions.RemoveEmptyEntries);
@@ -156,6 +215,7 @@ namespace adventofcode2023
 				}
 				mappingSections[sectionName] = rules;
 			}
+			Console.WriteLine($"Parsed {mappingSections.Count} mapping sections.");
 
 			string[] chain =
 			[
@@ -168,22 +228,22 @@ namespace adventofcode2023
 				"humidity-to-location"
 			];
 
-			List<long> finalLocations = new List<long>();
-			foreach (var seed in seeds)
+			foreach (var mapName in chain)
 			{
-				long current = seed;
-				foreach (var mapName in chain)
+				if (mappingSections.TryGetValue(mapName, out var rules))
 				{
-					if (mappingSections.TryGetValue(mapName, out var rules))
-					{
-						current = MapValue(current, rules);
-					}
+					seedIntervals = ApplyMappingStageEx(seedIntervals, rules);
 				}
-				finalLocations.Add(current);
-				Console.WriteLine($"Seed {seed} => Final Location: {current}");
 			}
-			long lowest = finalLocations.Min();
-			Console.WriteLine($"\nLowest location among all seeds: {lowest}");
+
+			long best = long.MaxValue;
+			foreach (var iv in seedIntervals)
+			{
+				long candidate = iv.Low + iv.Offset;
+				if (candidate < best)
+					best = candidate;
+			}
+			Console.WriteLine($"\nLowest location among all seeds: {best}");
 		}
 	}
 }
