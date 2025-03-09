@@ -8,4 +8,6 @@ Console.WriteLine("Advent of Code");
 // Helpers.BenchmarkDay(Day2.Run2);
 // Helpers.BenchmarkDay(Day3.Run2);
 // Helpers.BenchmarkDay(Day4.Run2);
-Helpers.BenchmarkDay(Day6.Run2);
+// Helpers.BenchmarkDay(Day6.Run2);
+// Helpers.BenchmarkDay(Day7.Run1);
+Helpers.BenchmarkDay(Day7.Run2);
