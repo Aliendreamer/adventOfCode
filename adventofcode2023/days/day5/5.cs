@@ -105,7 +105,7 @@ namespace adventofcode2023
 			Console.WriteLine($"\nLowest location among seeds: {lowest}");
 		}
 
-		class Interval
+		sealed class Interval
 		{
 			public long Low;
 			public long High;
