@@ -5,6 +5,13 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
+			"name": "Launch aoc 2025 dart",
+			"type": "dart",
+			"request": "launch",
+			"cwd": "${workspaceFolder}/adventofcode2025",
+			"program": "solve.dart"
+		},
+		{
 			"type": "node",
 			"request": "launch",
 			"name": "Launch aoc 2024 js",
