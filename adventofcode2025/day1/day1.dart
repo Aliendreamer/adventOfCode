@@ -2,9 +2,8 @@ import 'dart:io';
 
 import '../helpers.dart';
 
-/// Reads input and runs the solver. Returns the output as a String.
 Future<void> runDay1({String inputFile = 'day1/input.txt'}) async {
-  final lines = await _readInput(inputFile);
+  final lines = await readInput(inputFile);
   if (lines == null) return null;
   final result1 = solve(lines, false);
   final result2 = solve(lines, true);
@@ -12,23 +11,6 @@ Future<void> runDay1({String inputFile = 'day1/input.txt'}) async {
   stderr.writeln('Day 1 result2: $result2');
 }
 
-/// Reads lines from [fileName] located relative to this script's directory.
-Future<List<String>?> _readInput(String fileName) async {
-  try {
-    final inputUri = Platform.script.resolve(fileName);
-    final file = File.fromUri(inputUri);
-    if (!await file.exists()) {
-      stderr.writeln('Error: "${file.path}" not found.');
-      return null;
-    }
-    return await file.readAsLines();
-  } catch (e) {
-    stderr.writeln('Failed to read input: $e');
-    return null;
-  }
-}
-
-/// Implement your puzzle logic here.
 int solve(List<String> lines, bool isPartTwo) {
   // create the array of the dial
   final numbers = List.generate(100, (index) => index);
