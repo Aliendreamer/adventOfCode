@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math' as math;
 
 enum Direction { left, right }
 
@@ -51,4 +52,15 @@ Future<String?> readInputAsString(String fileName) async {
     stderr.writeln('Failed to read input: $e');
     return null;
   }
+}
+
+int concatNumbers(int a, int b) {
+  if (b == 0) {
+    return a * 10;
+  }
+  // number of digits in b
+  final digits = (math.log(b) / math.ln10).floor() + 1;
+  final pow10 = math.pow(10, digits).toInt();
+
+  return a * pow10 + b;
 }
