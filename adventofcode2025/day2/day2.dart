@@ -5,10 +5,18 @@ import '../helpers.dart';
 Future<void> runDay2({String inputFile = 'day2/input.txt'}) async {
   final lines = await readInputAsString(inputFile);
   if (lines == null) return null;
+  final stopwatchOne = Stopwatch()..start();
   final result1 = solve(lines, false);
+  stopwatchOne.stop();
+  final stopwatchTwo = Stopwatch()..start();
   final result2 = solve(lines, true);
-  stderr.writeln('Day 2 result1: $result1');
-  stderr.writeln('Day 2 result2: $result2');
+  stopwatchTwo.stop();
+  stderr.writeln(
+    'Day 2 result1: $result1  in ${stopwatchOne.elapsed.inMilliseconds} milliseconds',
+  );
+  stderr.writeln(
+    'Day 2 result2: $result2  in ${stopwatchOne.elapsed.inMilliseconds} milliseconds',
+  );
 }
 
 int solve(String input, bool isPartTwo) {
