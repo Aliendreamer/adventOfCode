@@ -64,3 +64,26 @@ int concatNumbers(int a, int b) {
 
   return a * pow10 + b;
 }
+
+bool isValid(int x, int y, int rows, int cols) =>
+    x >= 0 && y >= 0 && x < rows && y < cols;
+
+List<(int dr, int dc)> gridMovePatterns = [(-1, 0), (1, 0), (0, -1), (0, 1)];
+
+List<(int dr, int dc)> gridMovePatternsAndDiagonals = [
+  (0, 1), // Right
+  (0, -1), // Left
+  (1, 0), // Down
+  (-1, 0), // Up
+  (1, 1), // Down-Right
+  (1, -1), // Down-Left
+  (-1, 1), // Up-Right
+  (-1, -1), // Up-Left
+];
+
+List<List<T>> deepCopy2D<T>(List<List<T>> grid) {
+  return [
+    for (final row in grid)
+      [...row], // spread creates a new List<T> for each row
+  ];
+}
