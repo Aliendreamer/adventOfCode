@@ -2,12 +2,14 @@
 // import 'day2/day2.dart';
 // import 'day3/day3.dart';
 // import 'day4/day4.dart';
-import 'day5/day5.dart';
+// import 'day5/day5.dart';
+import 'day6/day6.dart';
 
 Future<void> main() async {
   // await runDay1();
   // await runDay2();
   // await runDay3();
   // await runDay4();
-  await runDay5();
+  //await runDay5();
+  await runDay6();
 }

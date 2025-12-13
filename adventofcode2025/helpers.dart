@@ -31,7 +31,12 @@ Future<List<String>?> readInput(String fileName) async {
       stderr.writeln('Error: "${file.path}" not found.');
       return null;
     }
-    return await file.readAsLines();
+    final input = await file.readAsLines();
+    final lines = input
+        .map((l) => l.trim())
+        .where((l) => l.isNotEmpty)
+        .toList();
+    return lines;
   } catch (e) {
     stderr.writeln('Failed to read input: $e');
     return null;
@@ -83,7 +88,15 @@ List<(int dr, int dc)> gridMovePatternsAndDiagonals = [
 
 List<List<T>> deepCopy2D<T>(List<List<T>> grid) {
   return [
-    for (final row in grid)
-      [...row], // spread creates a new List<T> for each row
+    for (final row in grid) [...row],
   ];
+}
+
+extension MapIndexedExtension<E> on Iterable<E> {
+  Iterable<T> mapIndexed<T>(T Function(int index, E element) f) sync* {
+    var i = 0;
+    for (final element in this) {
+      yield f(i++, element);
+    }
+  }
 }
